@@ -42,18 +42,7 @@ Project follows RESTful API principles and uses JWT-based authentication.
 
 ### 3. Open Hotel.sln in Microsoft Visual Studio
 
-4.1.  In Visual Studio open Tools -> NuGet Package Manager -> Package Manager Console
-
-4.2. Run
-```
- Install-Package Microsoft.EntityFrameworkCore -Version 8.0.10  
- Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.10  
- Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.10
-```
-
-4.3. Migrations are already included in the repository.
-
-4.4. Run
+### 4.  In Visual Studio open Tools -> NuGet Package Manager -> Package Manager Console and run
 ```
  Update-Database
 ```
