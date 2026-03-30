@@ -9,17 +9,17 @@ namespace Hotel.Controllers
     [Route("api/[controller]")]
     public class ReservationsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
         public ReservationsController(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var reservations = await _context.Reservations.ToListAsync();
+            var reservations = await context.Reservations.ToListAsync();
             return Ok(reservations);
         }
 

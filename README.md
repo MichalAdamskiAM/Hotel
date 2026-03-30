@@ -47,7 +47,7 @@ Project follows RESTful API principles and uses JWT-based authentication.
  Update-Database
 ```
 
-### 5. Run the application by clicking *http* button.
+### 5. Run the application by clicking *https* button.
 
 ### 6. You can test API in web browser or Postman. Application is running under *http://localhost:5269/api/Reservations* address.
 
