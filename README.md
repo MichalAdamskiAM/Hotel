@@ -12,13 +12,23 @@
 
 ## Technologies
 
-The technologies used include Microsoft SQL Server, C#.NET, ASP.NET, and Entity Framework on the backend, as well as React, TypeScript, HTML, and CSS on the frontend.
+### Backend:
+* Microsoft SQL Server
+* C#
+* ASP.NET
+* Entity Framework
+
+### Frontend  (planned)
+* React
+* TypeScript
+* HTML
+* CSS
 
 Project follows RESTful API principles and uses JWT-based authentication.
 
 ## Setup
 
-1. Install required software
+### 1. Install required software
 
 1.1. Install Microsoft SQL Server Express and select *Basic* version.
 
@@ -26,27 +36,31 @@ Project follows RESTful API principles and uses JWT-based authentication.
 * ASP.NET and web development
 * Data storage and processing
 
-1.3. You can also install SQl Server Management Studio (no additional workloads or components needed) if you want to see database.
+1.3. You can also install SQL Server Management Studio (no additional workloads or components needed) if you want to see the database.
 
-2. Download ZIP from GitHub and extract it or clone repository
+### 2. Download ZIP from GitHub and extract it (or clone repository)
 
-3. Open Hotel.sln in Microsoft Visual Studio
+### 3. Open Hotel.sln in Microsoft Visual Studio
 
-4.1.  In Visual Studio click open Tools -> NuGet Package Manager -> Package Manager Console
+4.1.  In Visual Studio open Tools -> NuGet Package Manager -> Package Manager Console
 
 4.2. Run
-> Install-Package Microsoft.EntityFrameworkCore -Version 8.0.10
-Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.10
-Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.10
+```
+ Install-Package Microsoft.EntityFrameworkCore -Version 8.0.10  
+ Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.10  
+ Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.10
+```
 
-4.3. Run
-> Update-Database
+4.3. Migrations are already included in the repository.
 
-4.4. Migrations are already included in the repository.
+4.4. Run
+```
+ Update-Database
+```
 
-5. Run the application by clicking *http* button.
+### 5. Run the application by clicking *http* button.
 
-6. You can test API in web browser or Postman. Application is running under *http://localhost:5269/api/Reservations* address.
+### 6. You can test API in web browser or Postman. Application is running under *http://localhost:5269/api/Reservations* address.
 
 
 
