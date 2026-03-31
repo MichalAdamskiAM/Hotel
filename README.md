@@ -61,7 +61,7 @@ appsettings.Development.json
 
 4.3. Replace *secret_key* with 32-characters long random string.
 
-### 5.  In Visual Studio open Tools -> NuGet Package Manager -> Package Manager Console and run
+### 5.  In Visual Studio open *Tools -> NuGet Package Manager -> Package Manager Console* and run
 ```
  Update-Database
 ```
@@ -69,7 +69,3 @@ appsettings.Development.json
 ### 6. Run the application by clicking *http* button.
 
 ### 7. You can test API in web browser or Postman. Application is running under *http://localhost:5269/api/Reservations* address.
-
-
-
-## Manual
