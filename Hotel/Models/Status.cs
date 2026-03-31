@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Hotel.Models
 {
     public class Status

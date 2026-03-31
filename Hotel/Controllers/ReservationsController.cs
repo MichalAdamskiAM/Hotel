@@ -2,6 +2,7 @@
 using Hotel.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.Controllers
 {
@@ -9,17 +10,18 @@ namespace Hotel.Controllers
     [Route("api/[controller]")]
     public class ReservationsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
         public ReservationsController(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            var reservations = await _context.Reservations.ToListAsync();
+            var reservations = await context.Reservations.ToListAsync();
             return Ok(reservations);
         }
 
