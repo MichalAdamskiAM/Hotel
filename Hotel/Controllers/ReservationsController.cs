@@ -2,6 +2,7 @@
 using Hotel.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.Controllers
 {
@@ -17,6 +18,7 @@ namespace Hotel.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var reservations = await context.Reservations.ToListAsync();
