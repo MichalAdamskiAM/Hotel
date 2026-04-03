@@ -1,6 +1,8 @@
+using Hotel.Authorization;
 using Hotel.Context;
 using Hotel.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -58,12 +60,15 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.MapInboundClaims = false;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
+        ValidateLifetime = true,
     };
 
     options.Events = new JwtBearerEvents
@@ -96,6 +101,8 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationHandler, PrivilegeHandler>();
 
 var app = builder.Build();
 

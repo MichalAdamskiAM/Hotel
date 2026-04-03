@@ -1,8 +1,11 @@
-﻿using Hotel.Models;
-using Hotel.Context;
+﻿using Hotel.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Hotel.DTOs;
+using Hotel.Services;
+using Hotel.Models;
 
 namespace Hotel.Controllers
 {
@@ -10,43 +13,77 @@ namespace Hotel.Controllers
     [Route("api/[controller]")]
     public class ReservationsController : ControllerBase
     {
-        private readonly AppDbContext context;
+        private readonly AppDbContext dbContext;
 
-        public ReservationsController(AppDbContext context)
+        public ReservationsController(AppDbContext dbContext)
         {
-            this.context = context;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromServices] IAuthorizationService authService)
         {
-            var reservations = await context.Reservations.ToListAsync();
-            return Ok(reservations);
+            if ((await authService.AuthorizeAsync(User, null,
+                new PrivilegeRequirement("SeeAllReservations"))).Succeeded)
+            {
+                return Ok(await dbContext.Reservations.ToListAsync());
+            }
+
+            if ((await authService.AuthorizeAsync(User, null,
+                new PrivilegeRequirement("SeeOwnReservations"))).Succeeded)
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.Name)!.Value);
+
+                return Ok(await dbContext.Reservations
+                    .Where(r => r.UserId == userId)
+                    .ToListAsync());
+            }
+
+            return Forbid();
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(Reservation reservation)
+        public async Task<IActionResult> Create([FromServices] IAuthorizationService authService, [FromBody] CreatingReservationDto dto)
         {
-            //if (reservation.StartDate >= reservation.EndDate)
-            //{
-            //    return BadRequest("StartDate must be earlier than EndDate");
-            //}
+            var reservationService = new ReservationService(dbContext);
 
-            //bool isConflict = await _context.Reservations
-            //    .AnyAsync(r =>
-            //        r.StartDate < reservation.EndDate &&
-            //        r.EndDate > reservation.StartDate);
+            if (dto.StartDate >= dto.EndDate)
+                return BadRequest("StartDate must be earlier than EndDate");
 
-            //if (isConflict)
-            //{
-            //    return BadRequest("The date is already booked");
-            //}
+            if (
+                !(await authService.AuthorizeAsync(User, null,
+                    new PrivilegeRequirement("ManageAllReservationsDates"))).Succeeded ||
+                !(await authService.AuthorizeAsync(User, null,
+                    new PrivilegeRequirement("ManageAllReservationsRooms"))).Succeeded
+            )
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.Name)!.Value);
+                if (
+                    userId != dto.UserId ||
+                    !(await authService.AuthorizeAsync(User, null,
+                        new PrivilegeRequirement("ManageOwnReservationsDates"))).Succeeded ||
+                    !(await authService.AuthorizeAsync(User, null,
+                        new PrivilegeRequirement("ManageOwnReservationsRooms"))).Succeeded
+                )
+                {
+                    return Forbid();
+                }
+            }
 
-            //_context.Reservations.Add(reservation);
-            //await _context.SaveChangesAsync();
+            Reservation createdReservation;
 
-            return Ok(reservation);
+            try
+            {
+                createdReservation = await reservationService.Add(dto);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(createdReservation);
         }
     }
 }
