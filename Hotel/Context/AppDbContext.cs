@@ -58,19 +58,20 @@ namespace Hotel.Context
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Room>()
-                .HasKey(r => r.Number);
-
-            modelBuilder.Entity<Room>()
                 .Property(r => r.Area)
                 .HasPrecision(6, 2);
 
+            modelBuilder.Entity<Room>()
+                .HasIndex(r => r.Number)
+                .IsUnique();
+
             modelBuilder.Entity<RoomReservation>()
-                .HasKey(rr => new { rr.RoomNumber, rr.ReservationId });
+                .HasKey(rr => new { rr.RoomId, rr.ReservationId });
 
             modelBuilder.Entity<RoomReservation>()
                 .HasOne(rr => rr.Room)
                 .WithMany(r => r.RoomReservations)
-                .HasForeignKey(rr => rr.RoomNumber)
+                .HasForeignKey(rr => rr.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RoomReservation>()

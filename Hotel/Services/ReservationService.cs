@@ -20,7 +20,7 @@ namespace Hotel.Services
         /// </summary>
         /// <param name="dto">
         /// A <see cref="CreatingReservationDto"/> containing the reservation data:
-        /// start and end dates, user ID, and the numbers of the rooms to reserve.
+        /// start and end dates, user ID, and the IDs of the rooms to reserve.
         /// </param>
         /// <returns>
         /// A <see cref="Reservation"/> entity representing the newly created reservation.
@@ -41,7 +41,7 @@ namespace Hotel.Services
         /// <list type="number">
         /// <item>Checks if <paramref name="dto"/> is null and throws <see cref="ArgumentNullException"/> if so.</item>
         /// <item>Verifies that the user specified by <see cref="CreatingReservationDto.UserId"/> exists.</item>
-        /// <item>Verifies that all room numbers specified in <see cref="CreatingReservationDto.RoomNumbers"/> exist in the database.</item>
+        /// <item>Verifies that all room ids specified in <see cref="CreatingReservationDto.RoomIds"/> exist in the database.</item>
         /// <item>Checks for conflicts with existing reservations for the specified rooms and date range.</item>
         /// <item>If all checks pass, creates a new <see cref="Reservation"/> entity, sets its <see cref="Reservation.UserId"/> 
         /// and <see cref="Reservation.StatusId"/>, adds corresponding <see cref="RoomReservation"/> entries for each room, 
@@ -57,18 +57,18 @@ namespace Hotel.Services
             if (!userExists)
                 throw new InvalidOperationException($"User with id {dto.UserId} doesn't exist.");
 
-            var existingRoomNumbers = await dbContext.Rooms
-                .Where(r => dto.RoomNumbers.Contains(r.Number))
-                .Select(r => r.Number)
+            var existingRooms = await dbContext.Rooms
+                .Where(r => dto.RoomIds.Contains(r.Id))
+                .Select(r => r.Id)
                 .ToListAsync();
 
-            var missingRooms = dto.RoomNumbers.Except(existingRoomNumbers).ToList();
+            var missingRooms = dto.RoomIds.Except(existingRooms).ToList();
 
             if (missingRooms.Any())
-                throw new InvalidOperationException($"Rooms number {string.Join(", ", missingRooms)} don't exist.");
+                throw new InvalidOperationException($"Rooms with id {string.Join(", ", missingRooms)} don't exist.");
 
             bool isConflict = await dbContext.Reservations
-                .Where(r => r.RoomReservations.Any(rr => dto.RoomNumbers.Contains(rr.RoomNumber)))
+                .Where(r => r.RoomReservations.Any(rr => dto.RoomIds.Contains(rr.RoomId)))
                 .AnyAsync(r => r.StartDate < dto.EndDate && r.EndDate > dto.StartDate);
 
             if (isConflict)
@@ -80,9 +80,9 @@ namespace Hotel.Services
                 EndDate = dto.EndDate,
                 UserId = dto.UserId,
                 StatusId = 1,
-                RoomReservations = dto.RoomNumbers.Select(roomNumber => new RoomReservation
+                RoomReservations = dto.RoomIds.Select(ri => new RoomReservation
                 {
-                    RoomNumber = roomNumber
+                    RoomId = ri
                 }).ToList()
             };
 

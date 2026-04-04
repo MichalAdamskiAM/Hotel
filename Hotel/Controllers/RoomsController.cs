@@ -30,9 +30,9 @@ namespace Hotel.Controllers
             {
                 return Ok(await roomService.GetAll());
             }
-            catch (AccessDeniedException e)
+            catch (AccessDeniedException)
             {
-                return Forbid(e.Message);
+                return Forbid();
             }
         }
 
@@ -54,12 +54,13 @@ namespace Hotel.Controllers
 
             try
             {
+                var createdRoom = await roomService.Add(dto);
                 return CreatedAtAction(
-                    nameof(Get), new { number = dto.Number }, await roomService.Add(dto));
+                    nameof(Get), new { id = createdRoom.Id }, createdRoom);
             }
-            catch (AccessDeniedException e)
+            catch (AccessDeniedException)
             {
-                return Forbid(e.Message);
+                return Forbid();
             }
             catch (ArgumentException e)
             {
