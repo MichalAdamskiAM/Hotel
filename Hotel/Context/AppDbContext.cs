@@ -5,10 +5,7 @@ namespace Hotel.Context
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Privilege> Privileges { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;

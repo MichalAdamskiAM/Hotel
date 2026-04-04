@@ -43,8 +43,16 @@ namespace Hotel.Controllers
             return Forbid();
         }
 
+        [HttpGet("{id}")]
         [Authorize]
+        public async Task<IActionResult> Get(int id, [FromServices] IAuthorizationService authService)
+        {
+            return NotFound();
+            //to implement
+        }
+
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromServices] IAuthorizationService authService, [FromBody] CreatingReservationDto dto)
         {
             var reservationService = new ReservationService(dbContext);
@@ -83,7 +91,7 @@ namespace Hotel.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(createdReservation);
+            return CreatedAtAction(nameof(Get), new { id = createdReservation.Id }, createdReservation);
         }
     }
 }

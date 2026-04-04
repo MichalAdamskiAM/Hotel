@@ -103,6 +103,7 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IAuthorizationHandler, PrivilegeHandler>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
