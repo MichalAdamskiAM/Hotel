@@ -14,6 +14,7 @@ namespace Hotel.DTOs
 
         public int NumberOfPeople { get; set; }
         public decimal Area { get; set; }
+        public decimal Price { get; set; }
         public string Description { get; set; } = "";
     }
 }

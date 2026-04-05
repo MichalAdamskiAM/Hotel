@@ -15,6 +15,7 @@ namespace Hotel.Models
 
         public int NumberOfPeople { get; set; }
         public decimal Area { get; set; }
+        public decimal Price { get; set; }
         public string Description { get; set; } = string.Empty;
 
         public ICollection<RoomReservation> RoomReservations { get; set; } = new List<RoomReservation>();

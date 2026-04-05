@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260404163306_DateOnly")]
-    partial class DateOnly
+    [Migration("20260405114506_RoomPrice")]
+    partial class RoomPrice
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -271,11 +271,11 @@ namespace Hotel.Migrations
 
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
-                    b.Property<int>("Number")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Number"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("AirConditioning")
                         .HasColumnType("bit");
@@ -294,8 +294,15 @@ namespace Hotel.Migrations
                     b.Property<bool>("Kettle")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.Property<bool>("Refrigerator")
                         .HasColumnType("bit");
@@ -309,7 +316,10 @@ namespace Hotel.Migrations
                     b.Property<bool>("TV")
                         .HasColumnType("bit");
 
-                    b.HasKey("Number");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Number")
+                        .IsUnique();
 
                     b.ToTable("Rooms");
                 });
@@ -422,13 +432,13 @@ namespace Hotel.Migrations
 
             modelBuilder.Entity("RoomReservation", b =>
                 {
-                    b.Property<int>("RoomNumber")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.HasKey("RoomNumber", "ReservationId");
+                    b.HasKey("RoomId", "ReservationId");
 
                     b.HasIndex("ReservationId");
 
@@ -494,7 +504,7 @@ namespace Hotel.Migrations
 
                     b.HasOne("Hotel.Models.Room", "Room")
                         .WithMany("RoomReservations")
-                        .HasForeignKey("RoomNumber")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

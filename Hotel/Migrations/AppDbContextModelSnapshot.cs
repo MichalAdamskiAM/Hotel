@@ -297,6 +297,10 @@ namespace Hotel.Migrations
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
+
                     b.Property<bool>("Refrigerator")
                         .HasColumnType("bit");
 

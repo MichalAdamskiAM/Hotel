@@ -62,6 +62,10 @@ namespace Hotel.Context
                 .HasPrecision(6, 2);
 
             modelBuilder.Entity<Room>()
+                .Property(r => r.Price)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<Room>()
                 .HasIndex(r => r.Number)
                 .IsUnique();
 
@@ -79,7 +83,6 @@ namespace Hotel.Context
                 .WithMany(r => r.RoomReservations)
                 .HasForeignKey(rr => rr.ReservationId)
                 .OnDelete(DeleteBehavior.Cascade);
-
 
             modelBuilder.Entity<Privilege>().HasData(
                 new { Id = 1, Name = "SeeOwnReservations" },
