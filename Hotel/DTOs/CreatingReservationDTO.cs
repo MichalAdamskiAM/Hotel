@@ -1,11 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Hotel.DTOs
 {
     public class CreatingReservationDto
     {
-        public DateOnly StartDate { get; set; }
-        public DateOnly EndDate { get; set; }
+        [Required]
+        public required DateOnly StartDate { get; set; }
 
-        public int UserId { get; set; }
-        public ICollection<int> RoomIds { get; set; } = null!;
+        [Required]
+        public required DateOnly EndDate { get; set; }
+
+        public required int UserId { get; set; }
+
+        [Required]
+        public required ICollection<int> RoomIds { get; set; } = null!;
     }
 }

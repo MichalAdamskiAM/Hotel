@@ -14,23 +14,22 @@ using AutoMapper;
 
 namespace Hotel.Services
 {
-    public class RoomService(AppDbContext dbContext, IMapper mapper, IAuthorizationService authService, ClaimsPrincipal user)
+    public class RoomService(AppDbContext dbContext, IMapper mapper, IAuthorizationService authService)
     {
-        public async Task<ICollection> GetAll()
+        public async Task<ICollection<Room>> Get(ClaimsPrincipal user, int? id = null)
         {
             var privilegeRequirement = new PrivilegeRequirement("SeeAllRooms");
 
             if ((await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
             {
-                return await dbContext.Rooms.ToListAsync();
+                return await dbContext.Rooms.Where(r => id == null || r.Id == id).ToListAsync();
             }
             throw new AccessDeniedException(privilegeRequirement);
         }
 
-        public async Task<Room> Add(CreatingRoomDto dto)
+        public async Task<Room> Add(ClaimsPrincipal user, CreatingRoomDto dto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+            ArgumentNullException.ThrowIfNull(dto);
 
             var privilegeRequirement = new PrivilegeRequirement("ManageAllRooms");
             if (!(await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)

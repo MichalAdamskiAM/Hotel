@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Hotel.DTOs
 {
     public class CreatingRoomDto
     {
-        public int Number { get; set; }
+        [Range(1, 9999)]
+        public required int Number { get; set; }
 
         public bool Balcony { get; set; } = false;
         public bool SeaView { get; set; } = false;
@@ -12,9 +15,14 @@ namespace Hotel.DTOs
         public bool Safe { get; set; } = false;
         public bool TV { get; set; } = false;
 
-        public int NumberOfPeople { get; set; }
-        public decimal Area { get; set; }
-        public decimal Price { get; set; }
+        [Range(1, 30)]
+        public required int NumberOfPeople { get; set; }
+
+        public required decimal Area { get; set; }
+
+        public required decimal Price { get; set; }
+
+        [StringLength(1000)]
         public string Description { get; set; } = "";
     }
 }

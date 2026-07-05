@@ -13,30 +13,6 @@ namespace Hotel.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "RolePrivileges");
-
-            migrationBuilder.DropTable(
-                name: "RoomReservations");
-
-            migrationBuilder.DropTable(
-                name: "Privileges");
-
-            migrationBuilder.DropTable(
-                name: "Reservations");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
-
-            migrationBuilder.DropTable(
-                name: "Statuses");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
-
             migrationBuilder.CreateTable(
                 name: "Privileges",
                 columns: table => new

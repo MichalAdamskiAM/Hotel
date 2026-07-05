@@ -1,8 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Hotel.DTOs
 {
     public class LoginDto
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        [Required]
+        public required string Email { get; set; }
+
+        [Required]
+        [StringLength(50, MinimumLength = 8)]
+        public required string Password { get; set; }
     }
 }

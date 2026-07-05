@@ -104,6 +104,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IAuthorizationHandler, PrivilegeHandler>();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<ReservationService>();
 
 var app = builder.Build();
 

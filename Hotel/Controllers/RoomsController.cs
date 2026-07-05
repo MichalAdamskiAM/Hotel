@@ -10,51 +10,31 @@ namespace Hotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RoomsController : ControllerBase
+    public class RoomsController(RoomService roomService) : ControllerBase
     {
-        private readonly AppDbContext dbContext;
-
-        public RoomsController(AppDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
-
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromServices] IAuthorizationService authService,
-            [FromServices] IMapper mapper)
+        public async Task<IActionResult> GetAll()
         {
-            var roomService = new RoomService(dbContext, mapper, authService, User);
-
-            try
-            {
-                return Ok(await roomService.GetAll());
-            }
-            catch (AccessDeniedException)
-            {
-                return Forbid();
-            }
+            try { return Ok(await roomService.Get(User)); }
+            catch (AccessDeniedException) { return Forbid(); }
         }
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> Get([FromServices] IAuthorizationService authService,
-            [FromServices] IMapper mapper)
+        public async Task<IActionResult> Get(int id)
         {
-            return NotFound();
-            // to implement
+            try { return Ok(await roomService.Get(User, id)); }
+            catch (AccessDeniedException) { return Forbid(); }
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create([FromServices] IAuthorizationService authService,
-            [FromBody] CreatingRoomDto dto, [FromServices] IMapper mapper)
+        public async Task<IActionResult> Create([FromBody] CreatingRoomDto dto)
         {
-            var roomService = new RoomService(dbContext, mapper, authService, User);
-
             try
             {
-                var createdRoom = await roomService.Add(dto);
+                var createdRoom = await roomService.Add(User, dto);
                 return CreatedAtAction(
                     nameof(Get), new { id = createdRoom.Id }, createdRoom);
             }
