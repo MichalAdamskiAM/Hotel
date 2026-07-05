@@ -67,4 +67,4 @@ appsettings.Development.json
 
 ### 6. Run the application by clicking *http* button.
 
-### 7. You can test API in web browser or Postman. Application is running under *http://localhost:5269/api/Reservations* address.
+### 7. You can test API in Postman or Swagger. Application is running under *http://localhost:5269/api* address.
