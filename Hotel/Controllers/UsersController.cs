@@ -4,26 +4,35 @@ using Hotel.Context;
 using Hotel.DTOs;
 using Hotel.Services;
 using Hotel.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Hotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class UsersController(AppDbContext dbContext, JwtService jwtService) : ControllerBase
     {
-        private readonly AppDbContext context;
-        private readonly JwtService jwtService;
-
-        public AuthController(AppDbContext context, JwtService jwtService)
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromServices] IAuthorizationService authService)
         {
-            this.context = context;
-            this.jwtService = jwtService;
+            return NotFound();
+            //to implement
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromServices] IAuthorizationService authService)
+        {
+            return NotFound();
+            //to implement
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
 
             if (user == null)
                 return Unauthorized("There is no user with this email. Sign up first.");
@@ -40,9 +49,9 @@ namespace Hotel.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
-            var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (existingUser is not null)
-                return BadRequest("User with this email already exists");
+                return Conflict("User with this email already exists.");
 
             var user = new User
             {
@@ -53,10 +62,9 @@ namespace Hotel.Controllers
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-            return Ok("User created");
+            dbContext.Users.Add(user);
+            await dbContext.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }
     }
-
 }

@@ -1,0 +1,51 @@
+using Hotel.Context;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Hotel.DTOs;
+using Hotel.Services;
+using Hotel.Exceptions;
+using AutoMapper;
+
+namespace Hotel.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class RoomsController(RoomService roomService) : ControllerBase
+    {
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAll()
+        {
+            try { return Ok(await roomService.Get(User)); }
+            catch (AccessDeniedException) { return Forbid(); }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Get(int id)
+        {
+            try { return Ok(await roomService.Get(User, id)); }
+            catch (AccessDeniedException) { return Forbid(); }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreatingRoomDto dto)
+        {
+            try
+            {
+                var createdRoom = await roomService.Add(User, dto);
+                return CreatedAtAction(
+                    nameof(Get), new { id = createdRoom.Id }, createdRoom);
+            }
+            catch (AccessDeniedException)
+            {
+                return Forbid();
+            }
+            catch (ArgumentException e)
+            {
+                return Conflict(e.Message);
+            }
+        }
+    }
+}

@@ -5,10 +5,7 @@ namespace Hotel.Context
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Privilege> Privileges { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;
@@ -61,19 +58,24 @@ namespace Hotel.Context
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Room>()
-                .HasKey(r => r.Number);
-
-            modelBuilder.Entity<Room>()
                 .Property(r => r.Area)
                 .HasPrecision(6, 2);
 
+            modelBuilder.Entity<Room>()
+                .Property(r => r.Price)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<Room>()
+                .HasIndex(r => r.Number)
+                .IsUnique();
+
             modelBuilder.Entity<RoomReservation>()
-                .HasKey(rr => new { rr.RoomNumber, rr.ReservationId });
+                .HasKey(rr => new { rr.RoomId, rr.ReservationId });
 
             modelBuilder.Entity<RoomReservation>()
                 .HasOne(rr => rr.Room)
                 .WithMany(r => r.RoomReservations)
-                .HasForeignKey(rr => rr.RoomNumber)
+                .HasForeignKey(rr => rr.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RoomReservation>()
@@ -82,48 +84,47 @@ namespace Hotel.Context
                 .HasForeignKey(rr => rr.ReservationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-
             modelBuilder.Entity<Privilege>().HasData(
-                new Privilege { Id = 1, Name = "SeeOwnReservations" },
-                new Privilege { Id = 2, Name = "SeeAllRooms" },
-                new Privilege { Id = 3, Name = "SeeAllUsers" },
-                new Privilege { Id = 4, Name = "SeeAllReservations" },
-                new Privilege { Id = 5, Name = "ManageOwnReservationsDates" },
-                new Privilege { Id = 6, Name = "ManageOwnReservationsRooms" },
-                new Privilege { Id = 7, Name = "ManageAllReservationsDates" },
-                new Privilege { Id = 8, Name = "ManageAllReservationsRooms" },
-                new Privilege { Id = 9, Name = "ManageAllReservationsStatus" },
-                new Privilege { Id = 10, Name = "ManageAllRooms" },
-                new Privilege { Id = 11, Name = "ManageAllUsers" }
+                new { Id = 1, Name = "SeeOwnReservations" },
+                new { Id = 2, Name = "SeeAllRooms" },
+                new { Id = 3, Name = "SeeAllUsers" },
+                new { Id = 4, Name = "SeeAllReservations" },
+                new { Id = 5, Name = "ManageOwnReservationsDates" },
+                new { Id = 6, Name = "ManageOwnReservationsRooms" },
+                new { Id = 7, Name = "ManageAllReservationsDates" },
+                new { Id = 8, Name = "ManageAllReservationsRooms" },
+                new { Id = 9, Name = "ManageAllReservationsStatus" },
+                new { Id = 10, Name = "ManageAllRooms" },
+                new { Id = 11, Name = "ManageAllUsers" }
             );
 
             modelBuilder.Entity<Role>().HasData(
-                new Role { Id = 1, Name = "Customer" },
-                new Role { Id = 2, Name = "Receptionist" },
-                new Role { Id = 3, Name = "Administrator" }
+                new { Id = 1, Name = "Customer" },
+                new { Id = 2, Name = "Receptionist" },
+                new { Id = 3, Name = "Administrator" }
             );
 
             modelBuilder.Entity<RolePrivilege>().HasData(
-                new RolePrivilege { RoleId = 1, PrivilegeId = 1 },
-                new RolePrivilege { RoleId = 1, PrivilegeId = 2 },
-                new RolePrivilege { RoleId = 1, PrivilegeId = 5 },
-                new RolePrivilege { RoleId = 1, PrivilegeId = 6 },
+                new { RoleId = 1, PrivilegeId = 1 },
+                new { RoleId = 1, PrivilegeId = 2 },
+                new { RoleId = 1, PrivilegeId = 5 },
+                new { RoleId = 1, PrivilegeId = 6 },
 
-                new RolePrivilege { RoleId = 2, PrivilegeId = 2 },
-                new RolePrivilege { RoleId = 2, PrivilegeId = 3 },
-                new RolePrivilege { RoleId = 2, PrivilegeId = 4 },
-                new RolePrivilege { RoleId = 2, PrivilegeId = 7 },
-                new RolePrivilege { RoleId = 2, PrivilegeId = 8 },
-                new RolePrivilege { RoleId = 2, PrivilegeId = 9 },
+                new { RoleId = 2, PrivilegeId = 2 },
+                new { RoleId = 2, PrivilegeId = 3 },
+                new { RoleId = 2, PrivilegeId = 4 },
+                new { RoleId = 2, PrivilegeId = 7 },
+                new { RoleId = 2, PrivilegeId = 8 },
+                new { RoleId = 2, PrivilegeId = 9 },
 
-                new RolePrivilege { RoleId = 3, PrivilegeId = 2 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 3 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 4 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 7 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 8 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 9 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 10 },
-                new RolePrivilege { RoleId = 3, PrivilegeId = 11 }
+                new { RoleId = 3, PrivilegeId = 2 },
+                new { RoleId = 3, PrivilegeId = 3 },
+                new { RoleId = 3, PrivilegeId = 4 },
+                new { RoleId = 3, PrivilegeId = 7 },
+                new { RoleId = 3, PrivilegeId = 8 },
+                new { RoleId = 3, PrivilegeId = 9 },
+                new { RoleId = 3, PrivilegeId = 10 },
+                new { RoleId = 3, PrivilegeId = 11 }
             );
 
             modelBuilder.Entity<User>().HasData(
@@ -140,12 +141,12 @@ namespace Hotel.Context
             );
 
             modelBuilder.Entity<Status>().HasData(
-                new Status { Id = 1, Name = "Pending" },
-                new Status { Id = 2, Name = "Confirmed" },
-                new Status { Id = 3, Name = "Paid" },
-                new Status { Id = 4, Name = "Started" },
-                new Status { Id = 5, Name = "Completed" },
-                new Status { Id = 6, Name = "Cancelled" }
+                new { Id = 1, Name = "Pending" },
+                new { Id = 2, Name = "Confirmed" },
+                new { Id = 3, Name = "Paid" },
+                new { Id = 4, Name = "Started" },
+                new { Id = 5, Name = "Completed" },
+                new { Id = 6, Name = "Cancelled" }
             );
         }
     }

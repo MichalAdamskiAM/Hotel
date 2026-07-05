@@ -1,52 +1,58 @@
-﻿using Hotel.Models;
-using Hotel.Context;
+﻿using Hotel.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Hotel.DTOs;
+using Hotel.Services;
+using Hotel.Models;
+using Hotel.Exceptions;
 
 namespace Hotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ReservationsController : ControllerBase
+    public class ReservationsController(ReservationService reservationService) : ControllerBase
     {
-        private readonly AppDbContext context;
-
-        public ReservationsController(AppDbContext context)
-        {
-            this.context = context;
-        }
-
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            var reservations = await context.Reservations.ToListAsync();
-            return Ok(reservations);
+            try { return Ok(await reservationService.Get(User)); }
+            catch (AccessDeniedException) { return Forbid(); }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Get(int id)
+        {
+            try { return Ok(await reservationService.Get(User, id)); }
+            catch (AccessDeniedException) { return Forbid(); }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Reservation reservation)
+        [Authorize]
+        public async Task<IActionResult> Create([FromServices] IAuthorizationService authService, [FromBody] CreatingReservationDto dto)
         {
-            //if (reservation.StartDate >= reservation.EndDate)
-            //{
-            //    return BadRequest("StartDate must be earlier than EndDate");
-            //}
+            if (dto.StartDate >= dto.EndDate)
+                return BadRequest("StartDate must be earlier than EndDate");
 
-            //bool isConflict = await _context.Reservations
-            //    .AnyAsync(r =>
-            //        r.StartDate < reservation.EndDate &&
-            //        r.EndDate > reservation.StartDate);
+            Reservation createdReservation;
 
-            //if (isConflict)
-            //{
-            //    return BadRequest("The date is already booked");
-            //}
+            try
+            {
+                createdReservation = await reservationService.Add(User, dto);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (AccessDeniedException)
+            {
+                return Forbid();
+            }
 
-            //_context.Reservations.Add(reservation);
-            //await _context.SaveChangesAsync();
-
-            return Ok(reservation);
+            return CreatedAtAction(nameof(Get), new { id = createdReservation.Id }, createdReservation);
         }
     }
 }
