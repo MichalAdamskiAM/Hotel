@@ -1,17 +1,12 @@
-using Hotel.Context;
-using Hotel.DTOs;
-using Hotel.Models;
-using Hotel.Services;
-using Hotel.Exceptions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Collections;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using AutoMapper;
 using Hotel.Authorization;
+using Hotel.Context;
+using Hotel.DTOs;
+using Hotel.Exceptions;
+using Hotel.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Hotel.Services
 {

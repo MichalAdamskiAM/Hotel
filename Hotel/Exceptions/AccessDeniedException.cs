@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using Hotel.Authorization;
 
 namespace Hotel.Exceptions

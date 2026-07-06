@@ -1,8 +1,8 @@
+using Hotel.Authorization;
 using Hotel.Context;
 using Hotel.DTOs;
-using Hotel.Models;
 using Hotel.Exceptions;
-using Hotel.Authorization;
+using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -15,7 +15,7 @@ namespace Hotel.Services
         {
             var privilegeRequirement = new PrivilegeRequirement("SeeAllReservations");
 
-            if((await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
+            if ((await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
             {
                 return await dbContext.Reservations.Where(r => id == null || r.Id == id).ToListAsync();
             }
@@ -108,7 +108,7 @@ namespace Hotel.Services
                 ]);
             }
 
-            if(!(await authService.AuthorizeAsync(user, null, privilegeRequirements)).Succeeded)
+            if (!(await authService.AuthorizeAsync(user, null, privilegeRequirements)).Succeeded)
                 throw new AccessDeniedException(privilegeRequirements);
 
             bool userExists = await dbContext.Users.AnyAsync(u => u.Id == dto.UserId);

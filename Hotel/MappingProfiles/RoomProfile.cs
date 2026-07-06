@@ -1,11 +1,14 @@
 using AutoMapper;
-using Hotel.Models;
 using Hotel.DTOs;
+using Hotel.Models;
 
-public class RoomProfile : Profile
+namespace Hotel.MappingProfiles
 {
-    public RoomProfile()
+    public class RoomProfile : Profile
     {
-        CreateMap<CreatingRoomDto, Room>();
+        public RoomProfile()
+        {
+            CreateMap<CreatingRoomDto, Room>();
+        }
     }
 }

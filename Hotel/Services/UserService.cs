@@ -1,16 +1,16 @@
-﻿using Hotel.Context;
+﻿using AutoMapper;
+using Hotel.Authorization;
+using Hotel.Context;
 using Hotel.DTOs;
 using Hotel.Exceptions;
 using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Hotel.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.Services
 {
-    public class UserService(AppDbContext dbContext, IAuthorizationService authService, JwtService jwtService)
+    public class UserService(AppDbContext dbContext, IMapper mapper, IAuthorizationService authService, JwtService jwtService)
     {
         public async Task<ICollection<User>> Get(ClaimsPrincipal user, int? id = null)
         {
@@ -60,6 +60,22 @@ namespace Hotel.Services
             dbContext.Users.Add(newUser);
             await dbContext.SaveChangesAsync();
             return newUser;
+        }
+
+        public async Task<User> Update(ClaimsPrincipal user, int id, UpdatingUserDTO dto)
+        {
+            ArgumentNullException.ThrowIfNull(dto);
+
+            var privilegeRequirement = new PrivilegeRequirement("ManageAllUsers");
+            if (!(await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
+                throw new AccessDeniedException(privilegeRequirement);
+
+            var userToUpdate = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new ArgumentException("There is no user with this id");
+
+            mapper.Map(dto, userToUpdate);
+            await dbContext.SaveChangesAsync();
+            return userToUpdate;
         }
     }
 }
