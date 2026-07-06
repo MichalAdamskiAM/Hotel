@@ -1,7 +1,8 @@
+using Hotel.Authorization;
 using Hotel.Context;
 using Hotel.DTOs;
-using Hotel.Models;
 using Hotel.Exceptions;
+using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -14,7 +15,7 @@ namespace Hotel.Services
         {
             var privilegeRequirement = new PrivilegeRequirement("SeeAllReservations");
 
-            if((await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
+            if ((await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
             {
                 return await dbContext.Reservations.Where(r => id == null || r.Id == id).ToListAsync();
             }
@@ -89,25 +90,26 @@ namespace Hotel.Services
         {
             ArgumentNullException.ThrowIfNull(dto);
 
-            if (
-                !(await authService.AuthorizeAsync(user, null,
-                    new PrivilegeRequirement("ManageAllReservationsDates"))).Succeeded ||
-                !(await authService.AuthorizeAsync(user, null,
-                    new PrivilegeRequirement("ManageAllReservationsRooms"))).Succeeded
-            )
+            var userId = int.Parse(user.FindFirst(ClaimTypes.Name)!.Value);
+            PrivilegeRequirements privilegeRequirements;
+
+            if (userId == dto.UserId)
             {
-                var userId = int.Parse(user.FindFirst(ClaimTypes.Name)!.Value);
-                if (
-                    userId != dto.UserId ||
-                    !(await authService.AuthorizeAsync(user, null,
-                        new PrivilegeRequirement("ManageOwnReservationsDates"))).Succeeded ||
-                    !(await authService.AuthorizeAsync(user, null,
-                        new PrivilegeRequirement("ManageOwnReservationsRooms"))).Succeeded
-                )
-                {
-                    throw new AccessDeniedException();
-                }
+                privilegeRequirements = new PrivilegeRequirements([
+                    new PrivilegeRequirement("ManageOwnReservationsDates"),
+                    new PrivilegeRequirement("ManageOwnReservationsRooms")
+                ]);
             }
+            else
+            {
+                privilegeRequirements = new PrivilegeRequirements([
+                    new PrivilegeRequirement("ManageAllReservationsDates"),
+                    new PrivilegeRequirement("ManageAllReservationsRooms")
+                ]);
+            }
+
+            if (!(await authService.AuthorizeAsync(user, null, privilegeRequirements)).Succeeded)
+                throw new AccessDeniedException(privilegeRequirements);
 
             bool userExists = await dbContext.Users.AnyAsync(u => u.Id == dto.UserId);
             if (!userExists)
@@ -136,10 +138,10 @@ namespace Hotel.Services
                 EndDate = dto.EndDate,
                 UserId = dto.UserId,
                 StatusId = 1,
-                RoomReservations = dto.RoomIds.Select(ri => new RoomReservation
+                RoomReservations = [.. dto.RoomIds.Select(ri => new RoomReservation
                 {
                     RoomId = ri
-                }).ToList()
+                })]
             };
 
             dbContext.Reservations.Add(newReservation);

@@ -2,7 +2,6 @@ using Hotel.Context;
 using Hotel.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -42,7 +41,7 @@ namespace Hotel.Services
 
             foreach (var privilege in privileges)
             {
-                claims.Add(new ("Privilege", privilege));
+                claims.Add(new("Privilege", privilege));
             }
 
             var bytesKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

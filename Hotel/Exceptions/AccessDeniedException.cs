@@ -1,17 +1,16 @@
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Hotel.Authorization;
 
 namespace Hotel.Exceptions
 {
     public class AccessDeniedException : Exception
     {
-        private readonly PrivilegeRequirement? unfulfilledRequirement;
+        private readonly IPrivilegeRequirement? unfulfilledRequirement;
 
         public AccessDeniedException() : base("User doesn't have access to the resource.") { }
 
         public AccessDeniedException(string message) : base(message) { }
 
-        public AccessDeniedException(PrivilegeRequirement? unfulfilledRequirement)
+        public AccessDeniedException(IPrivilegeRequirement? unfulfilledRequirement) : base("User doesn't have access to the resource.")
         {
             this.unfulfilledRequirement = unfulfilledRequirement;
         }

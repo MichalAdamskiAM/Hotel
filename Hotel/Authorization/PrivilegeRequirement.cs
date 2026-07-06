@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
-public class PrivilegeRequirement : IAuthorizationRequirement
+namespace Hotel.Authorization
 {
-    public string PrivilegeName { get; }
-
-    public PrivilegeRequirement(string privilegeName)
+    public class PrivilegeRequirement(string privilegeName) : IPrivilegeRequirement
     {
-        PrivilegeName = privilegeName;
+        public string PrivilegeName { get; } = privilegeName;
+        
+        public bool IsFulfilled(List<Claim> userPrivileges)
+        {
+            return userPrivileges.Any(up => up.Value == PrivilegeName);
+        }
     }
 }

@@ -2,15 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.Authorization
 {
-    public class PrivilegeHandler : AuthorizationHandler<PrivilegeRequirement>
+    public class PrivilegeHandler : AuthorizationHandler<IPrivilegeRequirement>
     {
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
-            PrivilegeRequirement requirement)
+            IPrivilegeRequirement requirement)
         {
-            var hasPrivilege = context.User.Claims
-                .Where(c => c.Type == "Privilege")
-                .Any(c => c.Value == requirement.PrivilegeName);
+            var hasPrivilege = requirement.IsFulfilled([.. context.User.Claims.Where(c => c.Type == "Privilege")]);
 
             if (hasPrivilege)
             {
