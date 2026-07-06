@@ -19,5 +19,6 @@ namespace Hotel.DTOs
         [StringLength(50, MinimumLength = 8), RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$",
             ErrorMessage = "Password must contain uppercase, number and special character.")]
         public string? Password { get; set; }
+        public int? RoleId { get; set; }
     }
 }

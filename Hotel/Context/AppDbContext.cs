@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Hotel.Models;
+﻿using Hotel.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
         public DbSet<Privilege> Privileges { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<RolePrivilege> RolePrivileges { get; set; } = null!;
@@ -129,12 +127,13 @@ namespace Hotel.Context
 
             modelBuilder.Entity<User>().HasData(
                 // Default Admin
-                new User {
+                new User
+                {
                     Id = 1,
                     FirstName = "John",
                     LastName = "Doe",
                     Email = "johndoe@gmail.com",
-                    Phone = "123 456 789",
+                    Phone = "123456789",
                     Password = "$2a$12$5Tu.tWBGVpyJTAq11HjdHeYowvZzvi/izmVX1NS3ISGHdC/Q/dJJG", //zaq1@WSX
                     RoleId = 3
                 }
