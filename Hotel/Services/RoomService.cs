@@ -11,6 +11,7 @@ using System.Collections;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using AutoMapper;
+using Hotel.Authorization;
 
 namespace Hotel.Services
 {
