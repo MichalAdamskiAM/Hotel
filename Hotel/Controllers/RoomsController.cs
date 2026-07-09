@@ -23,6 +23,16 @@ namespace Hotel.Controllers
             catch (AccessDeniedException) { return Forbid(); }
         }
 
+        [HttpGet("search"), Authorize]
+        public async Task<IActionResult> Search(RoomSearchingDTO search)
+        {
+            if (search.StartDate is not null && search.EndDate is not null && search.StartDate >= search.EndDate)
+                return UnprocessableEntity("StartDate must be earlier than EndDate");
+
+            try { return Ok(await roomService.GetAvailable(User, search)); }
+            catch (AccessDeniedException) { return Forbid(); }
+        }
+
         [HttpPost, Authorize]
         public async Task<IActionResult> Create([FromBody] CreatingRoomDto dto)
         {

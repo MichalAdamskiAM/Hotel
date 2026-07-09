@@ -4,17 +4,17 @@ namespace Hotel.Models
     {
         public int Id { get; set; }
 
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Phone { get; set; } = null!;
-        public string Password { get; set; } = null!;
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public required string Email { get; set; }
+        public required string Phone { get; set; }
+        public required string Password { get; set; }
 
         public bool DarkMode { get; set; } = false;
 
         public int RoleId { get; set; } = 1;
         public Role Role { get; set; } = null!;
 
-        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public ICollection<Reservation> Reservations { get; set; } = [];
     }
 }

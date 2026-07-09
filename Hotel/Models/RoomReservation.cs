@@ -1,13 +1,15 @@
-using Hotel.Models;
 using System.Text.Json.Serialization;
 
-public class RoomReservation
+namespace Hotel.Models
 {
-    public int RoomId { get; set; }
-    public Room Room { get; set; } = null!;
+    public class RoomReservation
+    {
+        public int RoomId { get; set; }
+        public Room Room { get; set; } = null!;
 
-    public int ReservationId { get; set; }
+        public int ReservationId { get; set; }
 
-    [JsonIgnore]
-    public Reservation Reservation { get; set; } = null!;
+        [JsonIgnore]
+        public Reservation Reservation { get; set; } = null!;
+    }
 }

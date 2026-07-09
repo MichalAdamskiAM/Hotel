@@ -13,6 +13,8 @@ namespace Hotel.Context
         public DbSet<Reservation> Reservations { get; set; } = null!;
         public DbSet<Room> Rooms { get; set; } = null!;
         public DbSet<RoomReservation> RoomReservations { get; set; } = null!;
+        public DbSet<Amenity> Amenities { get; set; } = null!;
+        public DbSet<RoomAmenity> RoomAmenities { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,15 +73,30 @@ namespace Hotel.Context
                 .HasKey(rr => new { rr.RoomId, rr.ReservationId });
 
             modelBuilder.Entity<RoomReservation>()
-                .HasOne(rr => rr.Room)
+                .HasOne(ra => ra.Room)
                 .WithMany(r => r.RoomReservations)
-                .HasForeignKey(rr => rr.RoomId)
+                .HasForeignKey(ra => ra.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RoomReservation>()
-                .HasOne(rr => rr.Reservation)
+                .HasOne(ra => ra.Reservation)
                 .WithMany(r => r.RoomReservations)
-                .HasForeignKey(rr => rr.ReservationId)
+                .HasForeignKey(ra => ra.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RoomAmenity>()
+                .HasKey(ra => new { ra.RoomId, ra.AmenityId });
+
+            modelBuilder.Entity<RoomAmenity>()
+                .HasOne(ra => ra.Room)
+                .WithMany(r => r.RoomAmenities)
+                .HasForeignKey(ra => ra.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RoomAmenity>()
+                .HasOne(ra => ra.Amenity)
+                .WithMany(r => r.RoomAmenities)
+                .HasForeignKey(ra => ra.AmenityId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Privilege>().HasData(
@@ -146,6 +163,16 @@ namespace Hotel.Context
                 new { Id = 4, Name = "Started" },
                 new { Id = 5, Name = "Completed" },
                 new { Id = 6, Name = "Cancelled" }
+            );
+
+            modelBuilder.Entity<Amenity>().HasData(
+                new { Id = 1, Name = "Balcony" },
+                new { Id = 2, Name = "Sea view" },
+                new { Id = 3, Name = "Refrigerator" },
+                new { Id = 4, Name = "Kettle" },
+                new { Id = 5, Name = "Air conditioning" },
+                new { Id = 6, Name = "Safe" },
+                new { Id = 7, Name = "TV" }
             );
         }
     }

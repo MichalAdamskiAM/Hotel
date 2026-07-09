@@ -24,10 +24,9 @@ namespace Hotel.Services
 
             if ((await authService.AuthorizeAsync(user, null, privilegeRequirement)).Succeeded)
             {
-                return await dbContext.Reservations.Where(
-                    r => r.UserId.ToString() == user.Claims.First(c => c.Type == ClaimTypes.Name).Value &&
-                    (id == null || r.Id == id)
-                ).ToListAsync();
+                var userId = user.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+                return await dbContext.Reservations
+                    .Where(r => r.UserId.ToString() == userId && (id == null || r.Id == id)).ToListAsync();
             }
 
             throw new AccessDeniedException(privilegeRequirement);
