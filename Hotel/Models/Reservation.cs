@@ -13,7 +13,6 @@ namespace Hotel.Models
         public int StatusId { get; set; }
         public Status Status { get; set; } = null!;
 
-        public ICollection<RoomReservation> RoomReservations { get; set; } = new List<RoomReservation>();
-
+        public ICollection<RoomReservation> RoomReservations { get; set; } = [];
     }
 }
