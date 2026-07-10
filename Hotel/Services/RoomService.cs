@@ -39,7 +39,7 @@ namespace Hotel.Services
             throw new AccessDeniedException(privilegeRequirement);
         }
 
-        public async Task<ICollection<Room>> GetAvailable(ClaimsPrincipal user, RoomSearchingDTO search)
+        public async Task<ICollection<GettingRoomDto>> Search(ClaimsPrincipal user, RoomSearchingDTO search)
         {
             ArgumentNullException.ThrowIfNull(search);
 
@@ -65,10 +65,38 @@ namespace Hotel.Services
                     .Select(rr => rr.RoomId)]);
             }
 
-            return [.. dbContext.Rooms
-                .Where(r => !unavailableRoomIds.Contains(r.Id))
-                .Where(r => r.HasAmenities(search.AmenityIds))
-                //price, area, people, etc.
+            search.AmenityIds = [.. search.AmenityIds.Where(ai =>
+                dbContext.Amenities.Any(a => a.Id == ai))];
+
+            return
+            [
+                .. dbContext.Rooms
+                    .Include(r => r.RoomAmenities)
+                        .ThenInclude(ra => ra.Amenity)
+                    .Where(r => !unavailableRoomIds.Contains(r.Id))
+                    .AsEnumerable()
+                    .Select(r => new
+                    {
+                        Room = r,
+                        Score = r.MatchScore(search)
+                    })
+                    .Where(x => x.Score > 0)
+                    .OrderByDescending(x => x.Score)
+                    .Select(x => new GettingRoomDto{
+                        Id = x.Room.Id,
+                        Number = x.Room.Number,
+                        NumberOfPeople = x.Room.NumberOfPeople,
+                        Area = x.Room.Area,
+                        Price = x.Room.Price,
+                        Description = x.Room.Description,
+                        AmenityNames = [.. x.Room.RoomAmenities.Select(ra => ra.Amenity.Name)],
+                        MatchScore = x.Score,
+                        MissingAmenityNames = [..
+                            x.Room.MissingAmenityIds(search).Select(ai =>
+                            dbContext.Amenities.First(a => a.Id == ai).Name
+                        )],
+                        MissingKeywords = x.Room.MissingKeywords(search)
+                    })
             ];
         }
 

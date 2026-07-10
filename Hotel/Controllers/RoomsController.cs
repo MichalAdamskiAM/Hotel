@@ -24,12 +24,12 @@ namespace Hotel.Controllers
         }
 
         [HttpGet("search"), Authorize]
-        public async Task<IActionResult> Search(RoomSearchingDTO search)
+        public async Task<IActionResult> Search([FromQuery] RoomSearchingDTO search)
         {
             if (search.StartDate is not null && search.EndDate is not null && search.StartDate >= search.EndDate)
                 return UnprocessableEntity("StartDate must be earlier than EndDate");
 
-            try { return Ok(await roomService.GetAvailable(User, search)); }
+            try { return Ok(await roomService.Search(User, search)); }
             catch (AccessDeniedException) { return Forbid(); }
         }
 

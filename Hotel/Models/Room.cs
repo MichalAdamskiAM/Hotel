@@ -1,3 +1,5 @@
+using Hotel.DTOs;
+
 namespace Hotel.Models
 {
     public class Room
@@ -14,16 +16,43 @@ namespace Hotel.Models
 
         public ICollection<RoomReservation> RoomReservations { get; set; } = [];
 
-        public bool HasAmenities(ICollection<int> amenityIds)
+        public int MatchScore(RoomSearchingDTO search)
         {
-            foreach (var amenityId in amenityIds)
+            if (NumberOfPeople < search.MinNumberOfPeople ||
+                Area < search.MinArea || Price > search.MaxPrice)
+            {
+                return 0;
+            }
+
+            return
+                search.AmenityIds.Count(id => RoomAmenities.Any(ra => ra.AmenityId == id)) +
+                search.Keywords.Count(k => Description.Contains(k));
+        }
+
+        public List<int> MissingAmenityIds(RoomSearchingDTO search)
+        {
+            var result = new List<int>();
+            foreach (var amenityId in search.AmenityIds)
             {
                 if (!this.RoomAmenities.Select(ra => ra.AmenityId).Contains(amenityId))
                 {
-                    return false;
+                    result.Add(amenityId);
                 }
             }
-            return true;
+            return result;
+        }
+
+        public List<string> MissingKeywords(RoomSearchingDTO search)
+        {
+            var result = new List<string>();
+            foreach (var keyword in search.Keywords)
+            {
+                if (!this.Description.Contains(keyword))
+                {
+                    result.Add(keyword);
+                }
+            }
+            return result;
         }
     }
 }

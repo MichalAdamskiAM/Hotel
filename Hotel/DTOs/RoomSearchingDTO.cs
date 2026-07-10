@@ -10,13 +10,9 @@ namespace Hotel.DTOs
         public ICollection<int> AmenityIds { get; set; } = [];
 
         [Range(1, 30)]
-        public required int NumberOfPeople { get; set; } = 1;
-
-        public required decimal Area { get; set; } = 0;
-
-        public required decimal Price { get; set; } = decimal.MaxValue;
-
-        [StringLength(1000)]
-        public string Description { get; set; } = "";
+        public int MinNumberOfPeople { get; set; } = 1;
+        public decimal MinArea { get; set; } = 0;
+        public decimal MaxPrice { get; set; } = decimal.MaxValue;
+        public ICollection<string> Keywords { get; set; } = [];
     }
 }
