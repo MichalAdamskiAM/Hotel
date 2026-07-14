@@ -6,7 +6,7 @@ obj/
 *.suo
 *.log
 
-Hotel/appsettings.Development.json
+HotelBackend/appsettings.Development.json
 
 *.nupkg
 packages/
