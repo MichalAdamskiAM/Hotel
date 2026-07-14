@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Hotel.Authorization
+namespace HotelBackend.Authorization
 {
     public class PrivilegeHandler : AuthorizationHandler<IPrivilegeRequirement>
     {

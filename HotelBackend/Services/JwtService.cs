@@ -1,12 +1,12 @@
-using Hotel.Context;
-using Hotel.Models;
+using HotelBackend.Context;
+using HotelBackend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Hotel.Services
+namespace HotelBackend.Services
 {
     public class JwtService
     {

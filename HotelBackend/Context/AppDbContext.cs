@@ -1,7 +1,7 @@
-﻿using Hotel.Models;
+﻿using HotelBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hotel.Context
+namespace HotelBackend.Context
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {

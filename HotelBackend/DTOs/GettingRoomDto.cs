@@ -1,4 +1,4 @@
-﻿namespace Hotel.DTOs
+﻿namespace HotelBackend.DTOs
 {
     public class GettingRoomDto
     {

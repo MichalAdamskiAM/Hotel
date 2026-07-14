@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Hotel.DTOs;
-using Hotel.Models;
+using HotelBackend.DTOs;
+using HotelBackend.Models;
 
-namespace Hotel.MappingProfiles
+namespace HotelBackend.MappingProfiles
 {
     public class UserProfile : Profile
     {

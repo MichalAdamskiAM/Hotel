@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Hotel.Migrations
+namespace HotelBackend.Migrations
 {
     /// <inheritdoc />
     public partial class AdminDefaultPhone : Migration

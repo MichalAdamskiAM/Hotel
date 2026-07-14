@@ -1,14 +1,14 @@
 using AutoMapper;
-using Hotel.Authorization;
-using Hotel.Context;
-using Hotel.DTOs;
-using Hotel.Exceptions;
-using Hotel.Models;
+using HotelBackend.Authorization;
+using HotelBackend.Context;
+using HotelBackend.DTOs;
+using HotelBackend.Exceptions;
+using HotelBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Hotel.Services
+namespace HotelBackend.Services
 {
     public class RoomService(AppDbContext dbContext, IMapper mapper, IAuthorizationService authService)
     {

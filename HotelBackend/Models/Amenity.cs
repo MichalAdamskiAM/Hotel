@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Hotel.Models
+namespace HotelBackend.Models
 {
     public class Amenity
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
-namespace Hotel.Authorization
+namespace HotelBackend.Authorization
 {
     public class PrivilegeRequirement(string privilegeName) : IPrivilegeRequirement
     {

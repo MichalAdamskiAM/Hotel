@@ -1,6 +1,6 @@
-using Hotel.DTOs;
+using HotelBackend.DTOs;
 
-namespace Hotel.Models
+namespace HotelBackend.Models
 {
     public class Room
     {

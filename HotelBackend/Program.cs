@@ -1,6 +1,6 @@
-using Hotel.Authorization;
-using Hotel.Context;
-using Hotel.Services;
+using HotelBackend.Authorization;
+using HotelBackend.Context;
+using HotelBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;

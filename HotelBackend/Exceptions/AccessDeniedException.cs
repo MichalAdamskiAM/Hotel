@@ -1,6 +1,6 @@
-using Hotel.Authorization;
+using HotelBackend.Authorization;
 
-namespace Hotel.Exceptions
+namespace HotelBackend.Exceptions
 {
     public class AccessDeniedException : Exception
     {

@@ -1,11 +1,11 @@
-﻿using Hotel.DTOs;
-using Hotel.Exceptions;
-using Hotel.Models;
-using Hotel.Services;
+﻿using HotelBackend.DTOs;
+using HotelBackend.Exceptions;
+using HotelBackend.Models;
+using HotelBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hotel.Controllers
+namespace HotelBackend.Controllers
 {
     [ApiController, Route("api/[controller]")]
     public class ReservationsController(ReservationService reservationService) : ControllerBase

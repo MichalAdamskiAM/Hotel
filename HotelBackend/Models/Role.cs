@@ -1,4 +1,4 @@
-namespace Hotel.Models
+namespace HotelBackend.Models
 {
     public class Role
     {
